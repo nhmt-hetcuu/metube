@@ -1,0 +1,26 @@
+services:
+  metube:
+    image: ghcr.io/alexta69/metube:latest
+    container_name: metube
+    ports:
+      - "8002:8081"
+    volumes:
+      - ./downloads:/downloads
+      - ./config:/config
+    restart: always
+    labels:
+      - com.centurylinklabs.watchtower.scope=metube
+
+  # Watchtower: tự cập nhật MeTube (và chính nó) lên bản mới nhất lúc 4h sáng, xóa image cũ
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: metube_watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_API_VERSION=1.40  # Khớp với yêu cầu của Docker Host
+      - TZ=Asia/Ho_Chi_Minh
+    command: --schedule "0 0 4 * * *" --cleanup --scope metube
+    labels:
+      - com.centurylinklabs.watchtower.scope=metube

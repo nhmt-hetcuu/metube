@@ -1,0 +1,8 @@
+# Loại trừ tất cả các file tải về (tránh đầy dung lượng git)
+downloads/*
+!downloads/.gitkeep
+
+# File tạm và logs
+*.log
+*.tmp
+.DS_Store
